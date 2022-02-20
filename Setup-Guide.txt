@@ -1,0 +1,55 @@
+*******************Dockerizing Front-End(Angular) , Backed-End(SpringBoot) & Mysql ********************************
+*******************************************************************************************************************
+
+Step : 1 - Create a custom docker network(Bridge) :::
+
+Create a docker network::: 
+> docker network create -d bridge my_network
+> docker network list
+
+Step : 2 -  Mysql DB
+
+> docker run --name mysqlcontainer --network my_network -e MYSQL_ROOT_PASSWORD=basha -e MYSQL_DATABASE=my_schema -d mysql:5.7
+> docker ps
+> docker exec -it mysqlcontainer bash
+> mysql -u root -p
+mysql > show databases;
+
+
+
+Step : 3 -  Backend Service :::
+
+> mvn -Dmaven.skip.test package
+> docker build -t springbootimg .
+> docker images
+> docker run --name springbootcontainer --network my_network -p 8080:8080 -d springbootimg
+> docker ps
+
+http://localhost:8080/api/employees
+
+------------------------------------------------
+> curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"name":"Basha","email":"basha@gmail.com","phone":"8142630030","department":"IT"}' \
+  http://localhost:8080/api/employees
+------------------------------------------------
+
+http://localhost:8080/api/employees
+
+Step : 4 -  Frontend :::
+
+> npm install
+> ng build
+> docker build -t angularimg .
+> docker images
+> docker run --name angularcontainer --network my_network -e API_URL="http://localhost:8080" -p 80:80 -d angularimg
+> docker ps
+> docker exec -it angularcontainer sh
+
+http://localhost:80
+
+
+####################################################
+References :::
+Angular build once deploy anywhere ::
+https://pumpingco.de/blog/environment-variables-angular-docker/

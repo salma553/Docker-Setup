@@ -39,7 +39,7 @@ http://localhost:8080/api/employees
 Step : 4 -  Frontend :::
 
 > npm install
-> ng build
+> ng build  (node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build   [or] node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod --configuration=test )
 > docker build -t angularimg .
 > docker images
 > docker run --name angularcontainer --network my_network -e API_URL="http://localhost:8080" -p 80:80 -d angularimg
